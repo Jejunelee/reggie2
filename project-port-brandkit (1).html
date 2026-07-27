@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Port — Brand Kit Created by Jenafy</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cyan:#32D7D2; --cyan-hover:#26C6C1; --cyan-pressed:#17B2AE;
+    --violet:#8B73F6; --emerald:#16C784; --amber:#F8B133; --coral:#F04D5E;
+    --glow: rgba(50,215,210,0.18); --selection:#E8FBFA; --focus: rgba(50,215,210,0.20);
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+  [data-theme="light"]{
+    --bg:#F6F8FA; --surface:#FFFFFF; --border:#E7EBEF;
+    --text:#101214; --text-2:#6C7680;
+    --btn2-default:#FFFFFF; --btn2-hover:#F2F6F8; --btn2-pressed:#E9EEF2; --btn2-border:#DCE3E8;
+  }
+  [data-theme="dark"]{
+    --bg:#101214; --surface:#181A1D; --elevated:#202327; --border:#30363B;
+    --text:#FFFFFF; --text-2:#A0A6AC;
+    --btn2-default:#202327; --btn2-hover:#262A2E; --btn2-pressed:#2C3136; --btn2-border:#30363B;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:var(--font-body); transition:background .25s ease, color .25s ease;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:980px; margin:0 auto; padding:0 32px 120px; }
+  ::selection{ background:var(--selection); color:#0A2E2C; }
+
+  /* topbar */
+  .topbar{
+    position:sticky; top:0; z-index:50; backdrop-filter:blur(10px);
+    background:color-mix(in srgb, var(--bg) 82%, transparent);
+    border-bottom:1px solid var(--border);
+  }
+  .topbar-inner{
+    max-width:980px; margin:0 auto; padding:18px 32px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo{ display:flex; align-items:center; gap:10px; }
+  .logo-mark{
+    width:26px; height:26px; border-radius:8px;
+    background:linear-gradient(155deg, var(--cyan) 0%, var(--violet) 130%);
+    position:relative; flex-shrink:0;
+  }
+  .logo-mark::after{
+    content:""; position:absolute; inset:7px;
+    border-radius:3px; background:var(--bg);
+  }
+  .logo-text{ font-family:var(--font-display); font-weight:600; font-size:16px; letter-spacing:-0.01em; }
+  .logo-sub{ font-size:11px; color:var(--text-2); font-family:var(--font-mono); letter-spacing:0.02em; }
+
+  .toggle{
+    display:flex; align-items:center; gap:8px; background:var(--surface);
+    border:1px solid var(--border); border-radius:999px; padding:4px; cursor:pointer;
+  }
+  .toggle button{
+    border:none; background:transparent; font-family:var(--font-body); font-size:12px;
+    font-weight:500; padding:6px 14px; border-radius:999px; cursor:pointer; color:var(--text-2);
+    transition:all .2s ease;
+  }
+  .toggle button.active{ background:var(--cyan); color:#081010; }
+
+  /* hero */
+  .hero{ padding:72px 0 56px; border-bottom:1px solid var(--border); }
+  .eyebrow{
+    font-family:var(--font-mono); font-size:12px; color:var(--cyan-pressed);
+    text-transform:uppercase; letter-spacing:0.08em; margin:0 0 14px;
+  }
+  [data-theme="dark"] .eyebrow{ color:var(--cyan); }
+  h1.title{
+    font-family:var(--font-display); font-weight:600; font-size:44px; line-height:1.1;
+    letter-spacing:-0.02em; margin:0 0 16px; max-width:640px;
+  }
+  .lede{ font-size:16px; line-height:1.6; color:var(--text-2); max-width:520px; margin:0; }
+
+  /* section headers */
+  .section{ padding:56px 0; border-bottom:1px solid var(--border); }
+  .section:last-child{ border-bottom:none; }
+  .section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:28px; gap:24px; }
+  .section-num{ font-family:var(--font-mono); font-size:12px; color:var(--text-2); }
+  h2.section-title{
+    font-family:var(--font-display); font-weight:600; font-size:24px;
+    letter-spacing:-0.01em; margin:4px 0 0;
+  }
+  .section-desc{ font-size:14px; color:var(--text-2); max-width:420px; text-align:right; line-height:1.5; }
+
+  /* swatches */
+  .swatch-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(190px,1fr)); gap:14px; }
+  .swatch{
+    border:1px solid var(--border); border-radius:14px; overflow:hidden; cursor:pointer;
+    background:var(--surface); transition:transform .15s ease, border-color .15s ease; position:relative;
+  }
+  .swatch:hover{ transform:translateY(-2px); border-color:var(--border); }
+  .swatch-color{ height:88px; }
+  .swatch-body{ padding:12px 14px; }
+  .swatch-purpose{ font-size:13px; font-weight:500; margin:0 0 3px; }
+  .swatch-hex{ font-family:var(--font-mono); font-size:12px; color:var(--text-2); margin:0; }
+  .swatch-copied{
+    position:absolute; top:10px; right:10px; font-size:10px; font-family:var(--font-mono);
+    background:rgba(0,0,0,0.6); color:#fff; padding:3px 7px; border-radius:5px; opacity:0;
+    transition:opacity .15s ease; pointer-events:none;
+  }
+  .swatch-copied.show{ opacity:1; }
+
+  /* buttons */
+  .btn-demo-row{ display:flex; flex-wrap:wrap; gap:32px; }
+  .btn-group{ display:flex; flex-direction:column; gap:12px; }
+  .btn-group-label{ font-size:12px; color:var(--text-2); font-family:var(--font-mono); }
+  .btn-states{ display:flex; gap:10px; flex-wrap:wrap; }
+  .btn{
+    font-family:var(--font-body); font-weight:600; font-size:14px; border-radius:10px;
+    padding:11px 20px; border:none; cursor:default; transition:filter .15s ease;
+  }
+  .btn-primary-default{ background:var(--cyan); color:#081010; }
+  .btn-primary-hover{ background:var(--cyan-hover); color:#081010; }
+  .btn-primary-pressed{ background:var(--cyan-pressed); color:#081010; }
+  .btn-secondary{
+    background:var(--btn2-default); color:var(--text); border:1px solid var(--btn2-border);
+  }
+  .btn-secondary-hover{ background:var(--btn2-hover); color:var(--text); border:1px solid var(--btn2-border); }
+  .btn-secondary-pressed{ background:var(--btn2-pressed); color:var(--text); border:1px solid var(--btn2-border); }
+  .state-caption{ font-size:11px; color:var(--text-2); text-align:center; margin-top:6px; font-family:var(--font-mono); }
+
+  /* highlights */
+  .highlight-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+  .highlight-card{ border:1px solid var(--border); border-radius:14px; padding:20px; background:var(--surface); }
+  .glow-demo{
+    height:70px; border-radius:10px; margin-bottom:14px;
+    background:var(--glow); border:1px dashed var(--cyan);
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--font-mono); font-size:11px; color:var(--cyan-pressed);
+  }
+  [data-theme="dark"] .glow-demo{ color:var(--cyan); }
+  .selection-demo{
+    height:70px; border-radius:10px; margin-bottom:14px; background:var(--selection);
+    display:flex; align-items:center; justify-content:center; font-size:13px; color:#0A2E2C;
+  }
+  .focus-demo-input{
+    width:100%; height:70px; border-radius:10px; margin-bottom:14px; border:1.5px solid var(--cyan);
+    box-shadow:0 0 0 4px var(--focus); background:var(--surface); color:var(--text);
+    font-family:var(--font-body); font-size:13px; padding:0 16px; outline:none;
+  }
+  .highlight-name{ font-size:13px; font-weight:500; margin:0 0 3px; }
+  .highlight-value{ font-family:var(--font-mono); font-size:11px; color:var(--text-2); margin:0; }
+
+  /* usage bar */
+  .usage-bar{ height:40px; border-radius:10px; overflow:hidden; display:flex; margin-bottom:20px; border:1px solid var(--border); }
+  .usage-seg-neutral{ background:var(--elevated, #E7EBEF); width:80%; }
+  .usage-seg-cyan{ background:var(--cyan); width:15%; }
+  .usage-seg-violet{ background:var(--violet); width:5%; }
+  .usage-legend{ display:flex; gap:28px; flex-wrap:wrap; }
+  .usage-legend-item{ display:flex; align-items:center; gap:8px; font-size:13px; }
+  .usage-dot{ width:10px; height:10px; border-radius:3px; flex-shrink:0; }
+
+  /* typography */
+  .type-row{ display:flex; align-items:baseline; justify-content:space-between; padding:18px 0; border-bottom:1px solid var(--border); gap:24px; }
+  .type-row:last-child{ border-bottom:none; }
+  .type-meta{ font-family:var(--font-mono); font-size:11px; color:var(--text-2); white-space:nowrap; }
+  .type-sample-display{ font-family:var(--font-display); font-weight:600; }
+  .type-sample-body{ font-family:var(--font-body); font-weight:400; }
+  .type-sample-mono{ font-family:var(--font-mono); font-weight:400; }
+  .font-tag{
+    display:inline-block; font-family:var(--font-mono); font-size:10px; color:var(--cyan-pressed);
+    background:var(--glow); padding:3px 8px; border-radius:6px; margin-bottom:8px;
+  }
+  [data-theme="dark"] .font-tag{ color:var(--cyan); }
+
+  /* component preview */
+  .preview-surface{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:28px;
+  }
+  .preview-card{
+    background:var(--bg); border:1px solid var(--border); border-radius:14px; padding:20px; max-width:340px;
+  }
+  .badge-row{ display:flex; gap:8px; margin:14px 0; flex-wrap:wrap; }
+  .badge{ font-size:11px; font-weight:500; padding:4px 10px; border-radius:999px; font-family:var(--font-body); }
+  .badge-success{ background:rgba(22,199,132,0.14); color:#0E9868; }
+  .badge-warning{ background:rgba(248,177,51,0.16); color:#B37814; }
+  .badge-danger{ background:rgba(240,77,94,0.14); color:#C93245; }
+  [data-theme="dark"] .badge-success{ color:#3FE0A0; }
+  [data-theme="dark"] .badge-warning{ color:#FBC865; }
+  [data-theme="dark"] .badge-danger{ color:#F58995; }
+  .preview-title{ font-family:var(--font-display); font-weight:600; font-size:16px; margin:0 0 4px; }
+  .preview-text{ font-size:13px; color:var(--text-2); margin:0 0 16px; line-height:1.5; }
+  .preview-btn{
+    background:var(--cyan); color:#081010; border:none; font-weight:600; font-size:13px;
+    padding:9px 16px; border-radius:9px; width:100%; font-family:var(--font-body); cursor:pointer;
+  }
+  .featured-chip{
+    display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:500;
+    color:#3D2E8C; background:rgba(139,115,246,0.16); padding:4px 10px; border-radius:999px; margin-bottom:12px;
+  }
+  [data-theme="dark"] .featured-chip{ color:#C6B8FC; }
+
+  /* --- extended context samples --- */
+  .sample-block{ margin-bottom:44px; }
+  .sample-block:last-child{ margin-bottom:0; }
+  .sample-label{
+    font-family:var(--font-mono); font-size:11px; color:var(--text-2);
+    text-transform:uppercase; letter-spacing:0.06em; margin:0 0 14px;
+  }
+
+  /* navbar */
+  .navbar-demo{
+    display:flex; align-items:center; justify-content:space-between; gap:20px;
+    background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:14px 20px;
+  }
+  .nav-links{ display:flex; gap:22px; align-items:center; }
+  .nav-link{ font-size:13px; font-weight:500; color:var(--text-2); text-decoration:none; position:relative; padding-bottom:4px; cursor:default; }
+  .nav-link.active{ color:var(--text); }
+  .nav-link.active::after{
+    content:""; position:absolute; left:0; right:0; bottom:-4px; height:2px;
+    background:var(--cyan); border-radius:2px;
+  }
+  .nav-search{
+    font-family:var(--font-body); font-size:12px; border:1px solid var(--border); background:var(--bg);
+    color:var(--text-2); border-radius:8px; padding:7px 12px; width:150px;
+  }
+  .nav-avatar{
+    width:30px; height:30px; border-radius:50%; background:linear-gradient(155deg, var(--cyan), var(--violet));
+    flex-shrink:0;
+  }
+
+  /* form */
+  .form-demo{ display:grid; grid-template-columns:1fr 1fr; gap:16px; max-width:520px; }
+  .field{ display:flex; flex-direction:column; gap:6px; }
+  .field label{ font-size:12px; font-weight:500; color:var(--text-2); }
+  .field input{
+    font-family:var(--font-body); font-size:13px; padding:9px 12px; border-radius:9px;
+    border:1px solid var(--border); background:var(--bg); color:var(--text); outline:none;
+  }
+  .field input.is-focus{ border-color:var(--cyan); box-shadow:0 0 0 4px var(--focus); }
+  .field input.is-error{ border-color:var(--coral); }
+  .field-hint{ font-size:11px; color:var(--text-2); }
+  .field-hint.error{ color:var(--coral); }
+  .field-hint.success{ color:var(--emerald); }
+  .form-actions{ grid-column:1 / -1; display:flex; gap:10px; margin-top:4px; }
+  .form-actions .btn{ padding:9px 18px; font-size:13px; }
+
+  /* alerts */
+  .alert-list{ display:flex; flex-direction:column; gap:10px; }
+  .alert{
+    display:flex; align-items:flex-start; gap:12px; border-radius:10px; padding:13px 16px;
+    border:1px solid transparent; font-size:13px; line-height:1.5;
+  }
+  .alert-dot{ width:8px; height:8px; border-radius:50%; margin-top:4px; flex-shrink:0; }
+  .alert-title{ font-weight:600; margin:0 0 2px; }
+  .alert-text{ margin:0; color:var(--text-2); }
+  .alert-success{ background:rgba(22,199,132,0.10); border-color:rgba(22,199,132,0.28); }
+  .alert-warning{ background:rgba(248,177,51,0.10); border-color:rgba(248,177,51,0.30); }
+  .alert-danger{ background:rgba(240,77,94,0.10); border-color:rgba(240,77,94,0.28); }
+
+  /* stats */
+  .stat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; }
+  .stat-card{ background:var(--bg); border:1px solid var(--border); border-radius:12px; padding:16px; }
+  .stat-label{ font-size:12px; color:var(--text-2); margin:0 0 8px; }
+  .stat-value{ font-family:var(--font-display); font-weight:600; font-size:24px; margin:0 0 6px; }
+  .stat-delta{ font-size:12px; font-weight:500; display:inline-flex; align-items:center; gap:4px; }
+  .stat-delta.up{ color:#0E9868; } .stat-delta.down{ color:#C93245; }
+  [data-theme="dark"] .stat-delta.up{ color:#3FE0A0; }
+  [data-theme="dark"] .stat-delta.down{ color:#F58995; }
+
+  /* pricing */
+  .pricing-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .pricing-card{
+    background:var(--bg); border:1px solid var(--border); border-radius:14px; padding:22px 20px;
+    display:flex; flex-direction:column;
+  }
+  .pricing-card.featured{ border:2px solid var(--cyan); position:relative; }
+  .pricing-card.premium{ border:1px solid rgba(139,115,246,0.5); }
+  .pricing-badge{
+    position:absolute; top:-11px; left:20px; background:var(--cyan); color:#081010;
+    font-size:10px; font-weight:600; padding:3px 10px; border-radius:999px;
+  }
+  .pricing-tier{ font-size:13px; font-weight:600; margin:0 0 6px; }
+  .pricing-price{ font-family:var(--font-display); font-weight:600; font-size:28px; margin:0 0 2px; }
+  .pricing-period{ font-size:12px; color:var(--text-2); margin:0 0 16px; }
+  .pricing-features{ list-style:none; padding:0; margin:0 0 20px; display:flex; flex-direction:column; gap:9px; flex:1; }
+  .pricing-features li{ font-size:12px; color:var(--text-2); display:flex; align-items:center; gap:8px; }
+  .pricing-check{ width:14px; height:14px; border-radius:50%; background:var(--glow); color:var(--cyan-pressed); flex-shrink:0; display:inline-flex; align-items:center; justify-content:center; font-size:9px; }
+  [data-theme="dark"] .pricing-check{ color:var(--cyan); }
+  .pricing-btn{
+    width:100%; padding:9px 0; border-radius:9px; font-size:13px; font-weight:600; text-align:center;
+    font-family:var(--font-body); border:1px solid var(--btn2-border); background:var(--btn2-default); color:var(--text);
+  }
+  .pricing-btn.primary{ background:var(--cyan); color:#081010; border:none; }
+
+  /* sidebar */
+  .sidebar-demo{
+    width:200px; background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:12px; display:flex; flex-direction:column; gap:2px;
+  }
+  .sidebar-item{
+    display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:8px;
+    font-size:13px; color:var(--text-2); font-weight:500; cursor:default;
+  }
+  .sidebar-item.active{ background:var(--glow); color:var(--cyan-pressed); }
+  [data-theme="dark"] .sidebar-item.active{ color:var(--cyan); }
+  .sidebar-dot{ width:6px; height:6px; border-radius:50%; background:currentColor; opacity:0.6; flex-shrink:0; }
+
+  footer{ padding:40px 0 0; font-size:12px; color:var(--text-2); font-family:var(--font-mono); }
+
+  @media (max-width:640px){
+    .wrap{ padding:0 20px 100px; }
+    h1.title{ font-size:32px; }
+    .section-head{ flex-direction:column; }
+    .section-desc{ text-align:left; }
+    .navbar-demo{ flex-wrap:wrap; }
+    .nav-links{ order:3; width:100%; }
+    .form-demo{ grid-template-columns:1fr; }
+    .pricing-grid{ grid-template-columns:1fr; }
+    .sidebar-demo{ width:100%; }
+  }
+</style>
+</head>
+<body data-theme="light">
+
+<div class="topbar">
+  <div class="topbar-inner">
+    <div class="logo">
+      <div class="logo-mark"></div>
+      <div>
+        <div class="logo-text">Project Port</div>
+        <div class="logo-sub">brand kit / v1.0</div>
+      </div>
+    </div>
+    <div class="toggle" id="themeToggle">
+      <button data-mode="light" class="active">Light</button>
+      <button data-mode="dark">Dark</button>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <div class="hero">
+    <p class="eyebrow">Color system</p>
+    <h1 class="title">Port Korea - Brand Kit</h1>
+    <p class="lede">Created by the Jenafy Team</p>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div><p class="section-num">01</p><h2 class="section-title">Core palette</h2></div>
+      <p class="section-desc">The brand's fixed identity colors. Cyan carries interaction, violet is reserved for premium moments, and the semantic three stay out of the way until needed.</p>
+    </div>
+    <div class="swatch-grid" id="coreSwatches"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div><p class="section-num">02</p><h2 class="section-title">Theme</h2></div>
+      <p class="section-desc">Switch the toggle above — this grid always reflects the active theme's neutrals.</p>
+    </div>
+    <div class="swatch-grid" id="themeSwatches"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div><p class="section-num">03</p><h2 class="section-title">Button states</h2></div>
+      <p class="section-desc">Primary uses the cyan ramp end to end. Secondary stays neutral and only ever borrows the border color.</p>
+    </div>
+    <div class="btn-demo-row">
+      <div class="btn-group">
+        <span class="btn-group-label">primary</span>
+        <div class="btn-states">
+          <div><button class="btn btn-primary-default">Default</button><div class="state-caption">#32D7D2</div></div>
+          <div><button class="btn btn-primary-hover">Hover</button><div class="state-caption">#26C6C1</div></div>
+          <div><button class="btn btn-primary-pressed">Pressed</button><div class="state-caption">#17B2AE</div></div>
+        </div>
+      </div>
+      <div class="btn-group">
+        <span class="btn-group-label">secondary</span>
+        <div class="btn-states">
+          <div><button class="btn btn-secondary">Default</button><div class="state-caption">border #DCE3E8</div></div>
+          <div><button class="btn btn-secondary-hover">Hover</button><div class="state-caption">#F2F6F8</div></div>
+          <div><button class="btn btn-secondary-pressed">Pressed</button><div class="state-caption">#E9EEF2</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div><p class="section-num">04</p><h2 class="section-title">Highlight colors</h2></div>
+      <p class="section-desc">Low-opacity cyan for ambient emphasis — glows, selections, focus rings.</p>
+    </div>
+    <div class="highlight-grid">
+      <div class="highlight-card">
+        <div class="glow-demo">interactive glow</div>
+        <p class="highlight-name">Interactive glow</p>
+        <p class="highlight-value">rgba(50,215,210,0.18)</p>
+      </div>
+      <div class="highlight-card">
+        <div class="selection-demo">selected text sits here</div>
+        <p class="highlight-name">Selection</p>
+        <p class="highlight-value">#E8FBFA</p>
+      </div>
+      <div class="highlight-card">
+        <input class="focus-demo-input" value="Focused input" readonly>
+        <p class="highlight-name">Focus ring</p>
+        <p class="highlight-value">rgba(50,215,210,0.20)</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div><p class="section-num">05</p><h2 class="section-title">Usage ratio</h2></div>
+      <p class="section-desc">The 80 / 15 / 5 split that keeps the identity calm rather than loud.</p>
+    </div>
+    <div class="usage-bar">
+      <div class="usage-seg-neutral"></div>
+      <div class="usage-seg-cyan"></div>
+      <div class="usage-seg-violet"></div>
+    </div>
+    <div class="usage-legend">
+      <div class="usage-legend-item"><span class="usage-dot" style="background:var(--elevated,#E7EBEF); border:1px solid var(--border);"></span>80% Neutrals — backgrounds, text, cards</div>
+      <div class="usage-legend-item"><span class="usage-dot" style="background:var(--cyan)"></span>15% Electric cyan — buttons, active nav, links</div>
+      <div class="usage-legend-item"><span class="usage-dot" style="background:var(--violet)"></span>5% Royal violet — premium, featured, special</div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div><p class="section-num">06</p><h2 class="section-title">Typography</h2></div>
+      <p class="section-desc">Not in your source spec, so chosen to match the palette's tone — geometric and confident, never decorative.</p>
+    </div>
+    <div>
+      <span class="font-tag">Space Grotesk — display</span>
+      <div class="type-row"><span class="type-sample-display" style="font-size:36px;">Ship it faster</span><span class="type-meta">600 / 36px</span></div>
+      <div class="type-row"><span class="type-sample-display" style="font-size:22px;">Section headings</span><span class="type-meta">600 / 22px</span></div>
+    </div>
+    <div style="margin-top:20px;">
+      <span class="font-tag">Inter — body</span>
+      <div class="type-row"><span class="type-sample-body" style="font-size:16px;">Body copy reads clearly at every size, from onboarding to settings.</span><span class="type-meta">400 / 16px</span></div>
+      <div class="type-row"><span class="type-sample-body" style="font-size:13px; color:var(--text-2);">Secondary text and captions drop to the muted gray.</span><span class="type-meta">400 / 13px</span></div>
+    </div>
+    <div style="margin-top:20px;">
+      <span class="font-tag">JetBrains Mono — data</span>
+      <div class="type-row"><span class="type-sample-mono" style="font-size:14px;">#32D7D2 · rgba(50,215,210,0.18)</span><span class="type-meta">400 / 14px</span></div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-head">
+      <div><p class="section-num">07</p><h2 class="section-title">In context</h2></div>
+      <p class="section-desc">The system applied to real components, so you can see the ratio hold up.</p>
+    </div>
+    <div class="preview-surface">
+
+      <div class="sample-block">
+        <p class="sample-label">Notification card</p>
+        <div style="display:flex; gap:20px; flex-wrap:wrap;">
+          <div class="preview-card">
+            <div class="featured-chip">★ Featured</div>
+            <p class="preview-title">Weekly digest</p>
+            <p class="preview-text">A quiet summary of what shipped in your ports this week.</p>
+            <div class="badge-row">
+              <span class="badge badge-success">On track</span>
+              <span class="badge badge-warning">Review needed</span>
+              <span class="badge badge-danger">Blocked</span>
+            </div>
+            <button class="preview-btn">View digest</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sample-block">
+        <p class="sample-label">Top navigation</p>
+        <div class="navbar-demo">
+          <div class="logo" style="gap:8px;">
+            <div class="logo-mark" style="width:20px;height:20px;"></div>
+            <span class="logo-text" style="font-size:14px;">Project Port</span>
+          </div>
+          <div class="nav-links">
+            <span class="nav-link active">Overview</span>
+            <span class="nav-link">Shipments</span>
+            <span class="nav-link">Reports</span>
+            <span class="nav-link">Settings</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:12px;">
+            <input class="nav-search" placeholder="Search" readonly>
+            <div class="nav-avatar"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sample-block">
+        <p class="sample-label">Form</p>
+        <div class="form-demo">
+          <div class="field">
+            <label>Container ID</label>
+            <input class="is-focus" value="PRT-88213" readonly>
+            <span class="field-hint">Focus ring shown</span>
+          </div>
+          <div class="field">
+            <label>Destination port</label>
+            <input class="is-error" value="unrecognized code" readonly>
+            <span class="field-hint error">Not a valid port code</span>
+          </div>
+          <div class="field">
+            <label>Carrier</label>
+            <input value="Maersk Line" readonly>
+            <span class="field-hint">&nbsp;</span>
+          </div>
+          <div class="field">
+            <label>ETA</label>
+            <input value="Aug 14, 2026" readonly>
+            <span class="field-hint success">Confirmed with carrier</span>
+          </div>
+          <div class="form-actions">
+            <button class="btn btn-primary-default">Save shipment</button>
+            <button class="btn btn-secondary">Cancel</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="sample-block">
+        <p class="sample-label">Inline alerts</p>
+        <div class="alert-list">
+          <div class="alert alert-success">
+            <span class="alert-dot" style="background:var(--emerald);"></span>
+            <div><p class="alert-title" style="color:#0E9868;">Shipment delivered</p><p class="alert-text">Container PRT-88213 cleared customs and arrived on schedule.</p></div>
+          </div>
+          <div class="alert alert-warning">
+            <span class="alert-dot" style="background:var(--amber);"></span>
+            <div><p class="alert-title" style="color:#B37814;">Customs review pending</p><p class="alert-text">One document is missing a signature — flag it before the 6pm cutoff.</p></div>
+          </div>
+          <div class="alert alert-danger">
+            <span class="alert-dot" style="background:var(--coral);"></span>
+            <div><p class="alert-title" style="color:#C93245;">Route disruption</p><p class="alert-text">Port congestion is adding an estimated 2-day delay to this shipment.</p></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sample-block">
+        <p class="sample-label">Dashboard stats</p>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <p class="stat-label">Active shipments</p>
+            <p class="stat-value">248</p>
+            <span class="stat-delta up">↑ 12% this week</span>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">On-time rate</p>
+            <p class="stat-value">94%</p>
+            <span class="stat-delta up">↑ 3pt</span>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Delayed</p>
+            <p class="stat-value">7</p>
+            <span class="stat-delta down">↓ 2 vs last week</span>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Avg. transit time</p>
+            <p class="stat-value">11.4d</p>
+            <span class="stat-delta up" style="color:var(--text-2);">steady</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sample-block">
+        <p class="sample-label">Pricing tiers</p>
+        <div class="pricing-grid">
+          <div class="pricing-card">
+            <p class="pricing-tier">Starter</p>
+            <p class="pricing-price">$0</p>
+            <p class="pricing-period">per month</p>
+            <ul class="pricing-features">
+              <li><span class="pricing-check">✓</span>Up to 10 shipments</li>
+              <li><span class="pricing-check">✓</span>Email support</li>
+              <li><span class="pricing-check">✓</span>Basic tracking</li>
+            </ul>
+            <span class="pricing-btn">Get started</span>
+          </div>
+          <div class="pricing-card featured">
+            <span class="pricing-badge">Most popular</span>
+            <p class="pricing-tier">Growth</p>
+            <p class="pricing-price">$49</p>
+            <p class="pricing-period">per month</p>
+            <ul class="pricing-features">
+              <li><span class="pricing-check">✓</span>Unlimited shipments</li>
+              <li><span class="pricing-check">✓</span>Priority support</li>
+              <li><span class="pricing-check">✓</span>Advanced analytics</li>
+              <li><span class="pricing-check">✓</span>Team accounts</li>
+            </ul>
+            <span class="pricing-btn primary">Start free trial</span>
+          </div>
+          <div class="pricing-card premium">
+            <p class="pricing-tier" style="color:#7C5FE0;">★ Enterprise</p>
+            <p class="pricing-price">Custom</p>
+            <p class="pricing-period">billed annually</p>
+            <ul class="pricing-features">
+              <li><span class="pricing-check">✓</span>Dedicated infrastructure</li>
+              <li><span class="pricing-check">✓</span>SLA guarantees</li>
+              <li><span class="pricing-check">✓</span>Custom integrations</li>
+              <li><span class="pricing-check">✓</span>White-glove onboarding</li>
+            </ul>
+            <span class="pricing-btn">Contact sales</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="sample-block">
+        <p class="sample-label">Sidebar navigation</p>
+        <div class="sidebar-demo">
+          <div class="sidebar-item active"><span class="sidebar-dot"></span>Overview</div>
+          <div class="sidebar-item"><span class="sidebar-dot"></span>Shipments</div>
+          <div class="sidebar-item"><span class="sidebar-dot"></span>Carriers</div>
+          <div class="sidebar-item"><span class="sidebar-dot"></span>Reports</div>
+          <div class="sidebar-item"><span class="sidebar-dot"></span>Settings</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <footer>Project Port — Brand Kit v1.0</footer>
+</div>
+
+<script>
+const CORE = [
+  {p:"Primary brand", h:"#32D7D2"}, {p:"Primary hover", h:"#26C6C1"}, {p:"Primary pressed", h:"#17B2AE"},
+  {p:"Secondary accent", h:"#8B73F6"}, {p:"Success", h:"#16C784"}, {p:"Warning", h:"#F8B133"}, {p:"Danger", h:"#F04D5E"}
+];
+const LIGHT = [
+  {p:"Background", h:"#F6F8FA"}, {p:"Surface / cards", h:"#FFFFFF"}, {p:"Border", h:"#E7EBEF"},
+  {p:"Primary text", h:"#101214"}, {p:"Secondary text", h:"#6C7680"}
+];
+const DARK = [
+  {p:"Background", h:"#101214"}, {p:"Surface / cards", h:"#181A1D"}, {p:"Elevated surface", h:"#202327"},
+  {p:"Border", h:"#30363B"}, {p:"Primary text", h:"#FFFFFF"}, {p:"Secondary text", h:"#A0A6AC"}
+];
+
+function renderSwatches(containerId, items){
+  const el = document.getElementById(containerId);
+  el.innerHTML = items.map(it => `
+    <div class="swatch" onclick="copyHex('${it.h}', this)">
+      <div class="swatch-color" style="background:${it.h};"></div>
+      <div class="swatch-body">
+        <p class="swatch-purpose">${it.p}</p>
+        <p class="swatch-hex">${it.h}</p>
+      </div>
+      <span class="swatch-copied">copied</span>
+    </div>
+  `).join('');
+}
+
+function copyHex(hex, node){
+  navigator.clipboard?.writeText(hex).catch(()=>{});
+  const badge = node.querySelector('.swatch-copied');
+  badge.classList.add('show');
+  setTimeout(()=>badge.classList.remove('show'), 900);
+}
+
+function setTheme(mode){
+  document.body.setAttribute('data-theme', mode);
+  document.querySelectorAll('#themeToggle button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.mode === mode);
+  });
+  renderSwatches('themeSwatches', mode === 'light' ? LIGHT : DARK);
+}
+
+document.getElementById('themeToggle').addEventListener('click', (e)=>{
+  const btn = e.target.closest('button');
+  if(!btn) return;
+  setTheme(btn.dataset.mode);
+});
+
+renderSwatches('coreSwatches', CORE);
+setTheme('light');
+</script>
+
+</body>
+</html>
