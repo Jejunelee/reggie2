@@ -10,11 +10,45 @@ export default function Lead() {
     email: "",
     message: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [status, setStatus] = useState<{
+    type: 'success' | 'error' | null;
+    message: string;
+  }>({ type: null, message: '' });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Form submitted:", formData);
+    setIsLoading(true);
+    setStatus({ type: null, message: '' });
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      setStatus({
+        type: 'success',
+        message: 'Message sent successfully! I\'ll get back to you soon.',
+      });
+      setFormData({ name: "", email: "", message: "" });
+    } catch (error) {
+      setStatus({
+        type: 'error',
+        message: error instanceof Error ? error.message : 'Failed to send message. Please try again.',
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleChange = (
@@ -80,6 +114,16 @@ export default function Lead() {
           >
             <div className="w-full rounded-2xl bg-white/90 backdrop-blur-sm p-6 shadow-sm border border-[#0b0d0d]/5">
               <form onSubmit={handleSubmit} className="w-full space-y-4">
+                {status.type && (
+                  <div className={`p-3 rounded-lg text-sm ${
+                    status.type === 'success' 
+                      ? 'bg-green-50 text-green-800 border border-green-200' 
+                      : 'bg-red-50 text-red-800 border border-red-200'
+                  }`}>
+                    {status.message}
+                  </div>
+                )}
+                
                 <div>
                   <label
                     htmlFor="name"
@@ -94,7 +138,8 @@ export default function Lead() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full rounded-lg border border-[#0b0d0d]/10 bg-white/50 px-4 py-3 text-sm font-light text-[#0b0d0d] placeholder-[#0b0d0d]/40 transition-colors focus:border-[#b88746] focus:outline-none focus:ring-1 focus:ring-[#b88746]"
+                    disabled={isLoading}
+                    className="w-full rounded-lg border border-[#0b0d0d]/10 bg-white/50 px-4 py-3 text-sm font-light text-[#0b0d0d] placeholder-[#0b0d0d]/40 transition-colors focus:border-[#b88746] focus:outline-none focus:ring-1 focus:ring-[#b88746] disabled:opacity-50"
                     placeholder="Your name"
                   />
                 </div>
@@ -113,7 +158,8 @@ export default function Lead() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full rounded-lg border border-[#0b0d0d]/10 bg-white/50 px-4 py-3 text-sm font-light text-[#0b0d0d] placeholder-[#0b0d0d]/40 transition-colors focus:border-[#b88746] focus:outline-none focus:ring-1 focus:ring-[#b88746]"
+                    disabled={isLoading}
+                    className="w-full rounded-lg border border-[#0b0d0d]/10 bg-white/50 px-4 py-3 text-sm font-light text-[#0b0d0d] placeholder-[#0b0d0d]/40 transition-colors focus:border-[#b88746] focus:outline-none focus:ring-1 focus:ring-[#b88746] disabled:opacity-50"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -132,25 +178,39 @@ export default function Lead() {
                     onChange={handleChange}
                     required
                     rows={4}
-                    className="w-full rounded-lg border border-[#0b0d0d]/10 bg-white/50 px-4 py-3 text-sm font-light text-[#0b0d0d] placeholder-[#0b0d0d]/40 transition-colors focus:border-[#b88746] focus:outline-none focus:ring-1 focus:ring-[#b88746] resize-none"
+                    disabled={isLoading}
+                    className="w-full rounded-lg border border-[#0b0d0d]/10 bg-white/50 px-4 py-3 text-sm font-light text-[#0b0d0d] placeholder-[#0b0d0d]/40 transition-colors focus:border-[#b88746] focus:outline-none focus:ring-1 focus:ring-[#b88746] resize-none disabled:opacity-50"
                     placeholder="Tell me about your project..."
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="group relative w-full overflow-hidden rounded-lg bg-[#b88746] px-6 py-3 text-sm font-medium text-white transition-all active:bg-[#d4a15b] active:shadow-lg"
+                  disabled={isLoading}
+                  className="group relative w-full overflow-hidden rounded-lg bg-[#b88746] px-6 py-3 text-sm font-medium text-white transition-all hover:bg-[#d4a15b] hover:shadow-lg hover:shadow-[#b88746]/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="relative z-10 font-angleton font-bold tracking-[0.05em] flex items-center justify-center">
-                    Send Message
-                    <motion.span
-                      className="ml-2 inline-block"
-                      initial={{ x: 0 }}
-                      whileHover={{ x: 4 }}
-                      transition={{ duration: 0.4 }}
-                    >
-                      →
-                    </motion.span>
+                    {isLoading ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        Send Message
+                        <motion.span
+                          className="ml-2 inline-block"
+                          initial={{ x: 0 }}
+                          whileHover={{ x: 4 }}
+                          transition={{ duration: 0.4 }}
+                        >
+                          →
+                        </motion.span>
+                      </>
+                    )}
                   </span>
                 </button>
               </form>
@@ -197,6 +257,16 @@ export default function Lead() {
           >
             <div className="w-full rounded-2xl bg-white/90 backdrop-blur-sm p-8 shadow-sm border border-[#0b0d0d]/5">
               <form onSubmit={handleSubmit} className="w-full space-y-5">
+                {status.type && (
+                  <div className={`p-3 rounded-lg text-sm ${
+                    status.type === 'success' 
+                      ? 'bg-green-50 text-green-800 border border-green-200' 
+                      : 'bg-red-50 text-red-800 border border-red-200'
+                  }`}>
+                    {status.message}
+                  </div>
+                )}
+                
                 <div>
                   <label
                     htmlFor="name"
@@ -211,7 +281,8 @@ export default function Lead() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full rounded-lg border border-[#0b0d0d]/10 bg-white/50 px-4 py-3 text-sm font-light text-[#0b0d0d] placeholder-[#0b0d0d]/40 transition-colors focus:border-[#b88746] focus:outline-none focus:ring-1 focus:ring-[#b88746]"
+                    disabled={isLoading}
+                    className="w-full rounded-lg border border-[#0b0d0d]/10 bg-white/50 px-4 py-3 text-sm font-light text-[#0b0d0d] placeholder-[#0b0d0d]/40 transition-colors focus:border-[#b88746] focus:outline-none focus:ring-1 focus:ring-[#b88746] disabled:opacity-50"
                     placeholder="Your name"
                   />
                 </div>
@@ -230,7 +301,8 @@ export default function Lead() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full rounded-lg border border-[#0b0d0d]/10 bg-white/50 px-4 py-3 text-sm font-light text-[#0b0d0d] placeholder-[#0b0d0d]/40 transition-colors focus:border-[#b88746] focus:outline-none focus:ring-1 focus:ring-[#b88746]"
+                    disabled={isLoading}
+                    className="w-full rounded-lg border border-[#0b0d0d]/10 bg-white/50 px-4 py-3 text-sm font-light text-[#0b0d0d] placeholder-[#0b0d0d]/40 transition-colors focus:border-[#b88746] focus:outline-none focus:ring-1 focus:ring-[#b88746] disabled:opacity-50"
                     placeholder="your@email.com"
                   />
                 </div>
@@ -249,25 +321,39 @@ export default function Lead() {
                     onChange={handleChange}
                     required
                     rows={4}
-                    className="w-full rounded-lg border border-[#0b0d0d]/10 bg-white/50 px-4 py-3 text-sm font-light text-[#0b0d0d] placeholder-[#0b0d0d]/40 transition-colors focus:border-[#b88746] focus:outline-none focus:ring-1 focus:ring-[#b88746] resize-none"
+                    disabled={isLoading}
+                    className="w-full rounded-lg border border-[#0b0d0d]/10 bg-white/50 px-4 py-3 text-sm font-light text-[#0b0d0d] placeholder-[#0b0d0d]/40 transition-colors focus:border-[#b88746] focus:outline-none focus:ring-1 focus:ring-[#b88746] resize-none disabled:opacity-50"
                     placeholder="Tell me about your project..."
                   />
                 </div>
 
                 <button
                   type="submit"
-                  className="group relative w-full overflow-hidden rounded-lg bg-[#b88746] px-6 py-3 text-sm font-medium text-white transition-all hover:bg-[#d4a15b] hover:shadow-lg hover:shadow-[#b88746]/20"
+                  disabled={isLoading}
+                  className="group relative w-full overflow-hidden rounded-lg bg-[#b88746] px-6 py-3 text-sm font-medium text-white transition-all hover:bg-[#d4a15b] hover:shadow-lg hover:shadow-[#b88746]/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <span className="relative z-10 font-angleton font-bold tracking-[0.05em] flex items-center justify-center">
-                    Send Message
-                    <motion.span
-                      className="ml-2 inline-block"
-                      initial={{ x: 0 }}
-                      whileHover={{ x: 4 }}
-                      transition={{ duration: 0.4 }}
-                    >
-                      →
-                    </motion.span>
+                    {isLoading ? (
+                      <>
+                        <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        Send Message
+                        <motion.span
+                          className="ml-2 inline-block"
+                          initial={{ x: 0 }}
+                          whileHover={{ x: 4 }}
+                          transition={{ duration: 0.4 }}
+                        >
+                          →
+                        </motion.span>
+                      </>
+                    )}
                   </span>
                 </button>
               </form>
