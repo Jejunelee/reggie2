@@ -10,6 +10,7 @@ type FeatureCard = {
   description: string;
   image: string;
   href: string;
+  isExternal?: boolean;
 };
 
 const features: FeatureCard[] = [
@@ -35,7 +36,8 @@ const features: FeatureCard[] = [
     title: "Timeless Products",
     description: "Blended sauces and mouthwatering cookbooks",
     image: "/Landing/Highlights/4x.png",
-    href: "/Products/Others",
+    href: "https://www.instagram.com/randcoessentials?igsh=MWM0NWlwb203MDBoMw%3D%3D&utm_source=qr",
+    isExternal: true,
   },
 ];
 
@@ -104,11 +106,8 @@ export default function Features() {
 
 // Extracted Feature Card Component
 function FeatureCard({ feature }: { feature: FeatureCard }) {
-  return (
-    <Link
-      href={feature.href}
-      className="group relative overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-2"
-    >
+  const cardContent = (
+    <>
       {/* Card Glow Effects */}
       <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-r from-[#b88746]/0 via-[#b88746]/10 to-[#b88746]/0 opacity-0 blur-sm transition-opacity duration-700 group-hover:opacity-100" />
       <div className="absolute -inset-0.5 rounded-xl bg-gradient-to-l from-[#b88746]/0 via-[#b88746]/5 to-[#b88746]/0 opacity-0 blur-md transition-opacity duration-700 delay-75 group-hover:opacity-100" />
@@ -149,6 +148,30 @@ function FeatureCard({ feature }: { feature: FeatureCard }) {
         <div className="absolute bottom-0 left-0 h-0.5 w-0 bg-[#b88746] transition-all duration-700 group-hover:w-full" />
         <div className="absolute bottom-0 left-0 h-0.5 w-0 bg-[#b88746]/30 blur-sm transition-all duration-700 delay-100 group-hover:w-full" />
       </div>
+    </>
+  );
+
+  // If external link, use anchor tag with target="_blank"
+  if (feature.isExternal) {
+    return (
+      <a
+        href={feature.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group relative overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-2 block cursor-pointer"
+      >
+        {cardContent}
+      </a>
+    );
+  }
+
+  // Internal links use Next.js Link
+  return (
+    <Link
+      href={feature.href}
+      className="group relative overflow-hidden rounded-xl bg-white shadow-sm transition-all duration-500 hover:shadow-xl hover:-translate-y-2 block cursor-pointer"
+    >
+      {cardContent}
     </Link>
   );
 }

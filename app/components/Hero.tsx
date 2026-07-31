@@ -25,13 +25,6 @@ export default function Hero() {
 
   return (
     <section className="relative min-h-[100svh] md:min-h-screen bg-[#0b0d0d] overflow-hidden">
-      {/* Ambient glows — mobile only */}
-      <div className="pointer-events-none absolute -top-20 -left-20 h-72 w-72 rounded-full bg-[#ca8643]/[0.08] blur-3xl md:hidden" />
-      <div className="pointer-events-none absolute bottom-0 -right-16 h-64 w-64 rounded-full bg-[#ca8643]/[0.06] blur-3xl md:hidden" />
-
-      {/* Gradient overlay — desktop only */}
-      <div className="hidden md:block absolute inset-0 z-10 bg-gradient-to-r from-[#0b0d0d] via-[#0b0d0d]/70 to-transparent lg:via-[#0b0d0d]/30" />
-
       {/* ================= MOBILE (< md): text-only hero ================= */}
       <div className="md:hidden relative z-20 flex min-h-[100svh] flex-col justify-center px-6 py-28">
         <motion.div
@@ -152,13 +145,6 @@ export default function Hero() {
                   sizes="(max-width: 1024px) 50vw, 55vw"
                   quality={85}
                   style={{ objectPosition: "center bottom" }}
-                />
-
-                {/* Decorative gold glow pulse */}
-                <motion.div
-                  className="absolute -bottom-4 -right-4 h-32 w-32 rounded-full bg-[#ca8643]/10 blur-2xl lg:h-48 lg:w-48 lg:blur-3xl pointer-events-none"
-                  animate={{ scale: [1, 1.15, 1], opacity: [0.3, 0.5, 0.3] }}
-                  transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
                 />
               </div>
             </div>

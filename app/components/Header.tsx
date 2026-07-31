@@ -30,11 +30,11 @@ const NAV_ITEMS: NavItem[] = [
     subItems: [
       {
         label: "Reggie's Cookbooks",
-        href: "https://www.philippinebooks.com/products/notes-from-my-kitchen-2-by-reggie-aspiras?srsltid=AfmBOooXGLTf3tp06ojg89W8khiK9o0iiXZ_nAg0tdBx9XyD6sEynk9I",
+        href: "https://www.instagram.com/randcoessentials?igsh=MWM0NWlwb203MDBoMw%3D%3D&utm_source=qr",
       },
       {
         label: "Reggie's Products",
-        href: "https://casajuan.ph/search?q=Reggie+Aspiras&options%5Bprefix%5D=last",
+        href: "https://www.instagram.com/randcoessentials?igsh=MWM0NWlwb203MDBoMw%3D%3D&utm_source=qr",
       },
     ],
   },
