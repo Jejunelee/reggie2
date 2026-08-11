@@ -29,8 +29,8 @@ export default function Hero() {
       <div className="md:hidden relative min-h-[100svh] bg-[#0b0d0d] flex items-center justify-center">
         <div className="w-full px-6">
           <div className="flex items-center gap-4">
-            {/* Left Column - Text */}
-            <div className="flex-1 max-w-[58%]">
+            {/* Left Column - Text - REDUCED WIDTH */}
+            <div className="flex-1 max-w-[45%]">
               <motion.div
                 initial={{ opacity: 0, scaleX: 0 }}
                 animate={{ opacity: 1, scaleX: 1 }}
@@ -77,8 +77,8 @@ export default function Hero() {
               </motion.div>
             </div>
 
-            {/* Right Column - Image - Flush to right edge */}
-            <div className="relative h-[70vh] w-[42%] flex-shrink-0 -mr-6">
+            {/* Right Column - Image - INCREASED WIDTH, less negative margin */}
+            <div className="relative h-[70vh] w-[55%] flex-shrink-0 -mr-4">
               <div className="absolute inset-0">
                 <Image
                   src="/Landing/Hero1.png"
@@ -86,7 +86,7 @@ export default function Hero() {
                   fill
                   className="object-cover"
                   priority
-                  sizes="42vw"
+                  sizes="55vw"
                   quality={95}
                   style={{ objectPosition: "center 35%" }}
                 />
