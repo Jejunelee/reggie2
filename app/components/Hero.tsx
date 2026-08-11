@@ -194,7 +194,8 @@ interface ExploreButtonProps {
 function ExploreButton({ onClick, isMobile, isDesktop }: ExploreButtonProps) {
   const baseStyles = "group relative inline-flex items-center overflow-hidden border-2 border-[#ca8643] text-[#ca8643] transition-colors cursor-pointer font-angleton font-bold";
   
-  const mobileStyles = "px-5 py-2.5 text-xs tracking-[0.18em] active:bg-[#ca8643] active:text-[#0b0d0d]";
+  // REDUCED font size for mobile from text-xs to text-[8px]
+  const mobileStyles = "px-4 py-2 text-[8px] tracking-[0.18em] active:bg-[#ca8643] active:text-[#0b0d0d]";
   const desktopStyles = "px-4 py-1.5 text-[10px] tracking-[0.15em] hover:bg-[#b88746] hover:text-[#0b0d0d] lg:px-6 lg:py-2.5 lg:text-sm lg:tracking-[0.2em] whitespace-nowrap";
 
   return (
