@@ -1,192 +1,26 @@
 // app/discover/recipes/page.tsx
 "use client";
 
-import { useState, useRef } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { 
   ArrowRight, 
   ChefHat, 
-  ChevronLeft, 
-  ChevronRight,
-  Utensils,
   Clock,
   Users,
   Star,
-  Lock,
-  Filter,
-  Search
 } from "lucide-react";
+import { recipes } from "@/lib/recipes";
 
-type Recipe = {
-  id: string;
-  title: string;
-  description: string;
-  image: string;
-  difficulty: "Easy" | "Medium" | "Hard";
-  prepTime: string;
-  cookTime: string;
-  servings: number;
-  rating: number;
-  category: string;
-  featured?: boolean;
-  slug: string;
-};
-
-// Placeholder data - will be replaced with Supabase fetch
-const recipes: Recipe[] = [
-  {
-    id: "1",
-    title: "Classic Chicken Adobo",
-    description: "The quintessential Filipino dish - tender chicken braised in soy sauce, vinegar, and garlic.",
-    image: "/recipe-1.jpg",
-    difficulty: "Easy",
-    prepTime: "15 min",
-    cookTime: "45 min",
-    servings: 4,
-    rating: 4.9,
-    category: "Main Dishes",
-    featured: true,
-    slug: "classic-chicken-adobo",
-  },
-  {
-    id: "2",
-    title: "Sinigang na Baboy",
-    description: "A comforting sour soup made with pork, tamarind, and fresh vegetables.",
-    image: "/recipe-2.jpg",
-    difficulty: "Medium",
-    prepTime: "20 min",
-    cookTime: "1 hour",
-    servings: 6,
-    rating: 4.8,
-    category: "Soups",
-    featured: false,
-    slug: "sinigang-na-baboy",
-  },
-  {
-    id: "3",
-    title: "Leche Flan",
-    description: "A rich and creamy caramel custard dessert that's a Filipino favorite.",
-    image: "/recipe-3.jpg",
-    difficulty: "Medium",
-    prepTime: "15 min",
-    cookTime: "1 hour",
-    servings: 8,
-    rating: 4.7,
-    category: "Desserts",
-    featured: false,
-    slug: "leche-flan",
-  },
-  {
-    id: "4",
-    title: "Lumpiang Shanghai",
-    description: "Crispy Filipino spring rolls filled with seasoned ground pork and vegetables.",
-    image: "/recipe-4.jpg",
-    difficulty: "Easy",
-    prepTime: "30 min",
-    cookTime: "20 min",
-    servings: 6,
-    rating: 4.6,
-    category: "Appetizers",
-    featured: true,
-    slug: "lumpiang-shanghai",
-  },
-  {
-    id: "5",
-    title: "Kare-Kare",
-    description: "A rich oxtail stew with peanut sauce, served with shrimp paste and vegetables.",
-    image: "/recipe-5.jpg",
-    difficulty: "Hard",
-    prepTime: "30 min",
-    cookTime: "3 hours",
-    servings: 6,
-    rating: 4.9,
-    category: "Main Dishes",
-    featured: false,
-    slug: "kare-kare",
-  },
-  {
-    id: "6",
-    title: "Pancit Canton",
-    description: "Stir-fried egg noodles with vegetables, meat, and savory sauce.",
-    image: "/recipe-6.jpg",
-    difficulty: "Easy",
-    prepTime: "15 min",
-    cookTime: "15 min",
-    servings: 4,
-    rating: 4.5,
-    category: "Noodles",
-    featured: false,
-    slug: "pancit-canton",
-  },
-  {
-    id: "7",
-    title: "Chicken Tinola",
-    description: "A warm and comforting ginger-based soup with chicken and green papaya.",
-    image: "/recipe-7.jpg",
-    difficulty: "Easy",
-    prepTime: "15 min",
-    cookTime: "40 min",
-    servings: 4,
-    rating: 4.4,
-    category: "Soups",
-    featured: false,
-    slug: "chicken-tinola",
-  },
-  {
-    id: "8",
-    title: "Bibingka",
-    description: "A traditional Filipino rice cake with salted egg and cheese toppings.",
-    image: "/recipe-8.jpg",
-    difficulty: "Medium",
-    prepTime: "20 min",
-    cookTime: "30 min",
-    servings: 6,
-    rating: 4.7,
-    category: "Desserts",
-    featured: false,
-    slug: "bibingka",
-  },
-  {
-    id: "9",
-    title: "Crispy Pata",
-    description: "Deep-fried pork knuckle with crispy skin and tender meat.",
-    image: "/recipe-9.jpg",
-    difficulty: "Hard",
-    prepTime: "30 min",
-    cookTime: "2 hours",
-    servings: 6,
-    rating: 4.8,
-    category: "Main Dishes",
-    featured: true,
-    slug: "crispy-pata",
-  },
-];
 
 export default function RecipesPage() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const categories = ["All", ...Array.from(new Set(recipes.map((recipe) => recipe.category)))];
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const carouselRef = useRef<HTMLDivElement>(null);
-  
-  const categories = ["All", "Main Dishes", "Soups", "Appetizers", "Desserts", "Noodles"];
-  
-  const filteredRecipes = selectedCategory === "All" 
-    ? recipes 
-    : recipes.filter(recipe => recipe.category === selectedCategory);
-  
-  const totalSlides = Math.ceil(filteredRecipes.length / 3);
 
-  const nextSlide = () => {
-    setCurrentIndex((prev) =>
-      prev === totalSlides - 1 ? 0 : prev + 1
-    );
-  };
-
-  const prevSlide = () => {
-    setCurrentIndex((prev) =>
-      prev === 0 ? totalSlides - 1 : prev - 1
-    );
-  };
+  const filteredRecipes = selectedCategory === "All"
+    ? recipes
+    : recipes.filter((recipe) => recipe.category === selectedCategory);
 
   const getDifficultyColor = (difficulty: string) => {
     switch(difficulty) {
@@ -242,174 +76,100 @@ export default function RecipesPage() {
         </div>
       </section>
 
-      {/* Lock Overlay - Coming Soon Banner */}
-      <div className="relative">
-        <div className="absolute inset-0 z-20 flex items-center justify-center pointer-events-none">
-          <div className="rounded-2xl bg-[#0b0d0d]/95 backdrop-blur-sm px-8 py-6 shadow-2xl border border-[#b88746]/30 pointer-events-auto">
-            <div className="flex items-center gap-4">
-              <div className="rounded-full bg-[#b88746]/20 p-3">
-                <Lock className="h-8 w-8 text-[#b88746]" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-white">Coming Soon!</h3>
-                <p className="text-sm text-gray-400">Recipes are being prepared</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Recipes Content with Blur */}
-        <div className="relative">
-          <div className="pointer-events-none blur-sm select-none">
-            {/* Category Filters */}
-            <section className="border-b border-[#0b0d0d]/5 bg-white/50 py-4">
-              <div className="mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-16">
-                <div className="flex flex-wrap items-center justify-center gap-3">
-                  {categories.map((category) => (
-                    <button
-                      key={category}
-                      onClick={() => setSelectedCategory(category)}
-                      className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
-                        selectedCategory === category
-                          ? "bg-[#b88746] text-white"
-                          : "border border-[#0b0d0d]/10 text-[#0b0d0d]/70 hover:border-[#b88746] hover:text-[#b88746]"
-                      }`}
-                    >
-                      {category}
-                    </button>
-                  ))}
+      <div>
+            {categories.length > 2 && (
+              <section className="border-b border-[#0b0d0d]/5 bg-white/50 py-4">
+                <div className="mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-16">
+                  <div className="flex flex-wrap items-center justify-center gap-3">
+                    {categories.map((category) => (
+                      <button
+                        key={category}
+                        onClick={() => setSelectedCategory(category)}
+                        className={`rounded-full px-4 py-1.5 text-xs font-medium transition-all ${
+                          selectedCategory === category
+                            ? "bg-[#b88746] text-white"
+                            : "border border-[#0b0d0d]/10 text-[#0b0d0d]/70 hover:border-[#b88746] hover:text-[#b88746]"
+                        }`}
+                      >
+                        {category}
+                      </button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
+            )}
 
-            {/* Recipes Carousel */}
             <section className="py-12 sm:py-16">
               <div className="mx-auto max-w-[1400px] px-6 sm:px-10 lg:px-16">
-                <div className="mb-6 flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-bold text-[#0b0d0d] sm:text-2xl">
-                      {selectedCategory === "All" ? "All Recipes" : selectedCategory}
-                    </h2>
-                    <p className="text-sm text-[#0b0d0d]/60">
-                      {filteredRecipes.length} recipes found
-                    </p>
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={prevSlide}
-                      className="rounded-full bg-[#b88746] p-2 text-white transition-all hover:bg-[#d4a15b] hover:scale-105 hover:shadow-lg hover:shadow-[#b88746]/30"
-                      aria-label="Previous"
-                    >
-                      <ChevronLeft className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={nextSlide}
-                      className="rounded-full bg-[#b88746] p-2 text-white transition-all hover:bg-[#d4a15b] hover:scale-105 hover:shadow-lg hover:shadow-[#b88746]/30"
-                      aria-label="Next"
-                    >
-                      <ChevronRight className="h-5 w-5" />
-                    </button>
-                  </div>
+                <div className="mb-6">
+                  <h2 className="text-xl font-bold text-[#0b0d0d] sm:text-2xl">
+                    {selectedCategory === "All" ? "All Recipes" : selectedCategory}
+                  </h2>
+                  <p className="text-sm text-[#0b0d0d]/60">
+                    {filteredRecipes.length} recipes found
+                  </p>
                 </div>
 
-                {/* Carousel */}
-                <div className="relative overflow-hidden">
-                  <div
-                    ref={carouselRef}
-                    className="flex transition-transform duration-500 ease-in-out"
-                    style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-                  >
-                    {filteredRecipes.map((recipe) => (
-                      <div
-                        key={recipe.id}
-                        className="w-full flex-shrink-0 px-2 sm:w-1/2 lg:w-1/3"
-                      >
-                        <div className="group overflow-hidden rounded-2xl bg-white shadow-sm transition-all hover:shadow-xl hover:-translate-y-2 border border-[#0b0d0d]/5 h-full flex flex-col">
-                          <div className="relative aspect-[4/3] overflow-hidden bg-[#f4f1ea]">
-                            <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-[#1a1d1d] to-[#0b0d0d] text-gray-500">
-                              <Utensils className="h-12 w-12 text-[#b88746] opacity-50" />
-                            </div>
-                            {/* Uncomment when images are ready */}
-                            {/* <Image
-                              src={recipe.image}
-                              alt={recipe.title}
-                              fill
-                              className="object-cover transition-transform duration-500 group-hover:scale-105"
-                            /> */}
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-                            
-                            {/* Featured Badge */}
-                            {recipe.featured && (
-                              <div className="absolute top-3 right-3 rounded-full bg-[#b88746] px-3 py-1 text-xs font-bold text-white uppercase">
-                                Featured
-                              </div>
-                            )}
-
-                            {/* Difficulty Badge */}
-                            <div className={`absolute top-3 left-3 rounded-full px-3 py-1 text-xs font-medium ${getDifficultyColor(recipe.difficulty)}`}>
-                              {recipe.difficulty}
-                            </div>
+                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+                  {filteredRecipes.map((recipe) => (
+                    <div
+                      key={recipe.id}
+                      className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#0b0d0d]/5 bg-white shadow-sm transition-all hover:-translate-y-2 hover:shadow-xl"
+                    >
+                      <div className="relative bg-[#f4f1ea]">
+                        <Image
+                          src={recipe.image}
+                          alt={recipe.imageAlt ?? recipe.title}
+                          width={recipe.imageWidth ?? 1200}
+                          height={recipe.imageHeight ?? 1600}
+                          sizes="(max-width: 640px) 100vw, 50vw"
+                          className="h-auto w-full"
+                        />
+                        {recipe.featured && (
+                          <div className="absolute top-3 right-3 rounded-full bg-[#b88746] px-3 py-1 text-xs font-bold text-white uppercase">
+                            Featured
                           </div>
-                          <div className="p-4 flex flex-col flex-1">
-                            <div className="flex items-start justify-between mb-2">
-                              <h3 className="text-base font-bold text-[#0b0d0d] group-hover:text-[#b88746] transition-colors line-clamp-2">
-                                {recipe.title}
-                              </h3>
-                            </div>
-                            <p className="mb-3 text-xs leading-relaxed text-[#0b0d0d]/70 line-clamp-2 flex-1">
-                              {recipe.description}
-                            </p>
-                            
-                            <div className="flex flex-wrap gap-2 mb-3">
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                                <Clock className="h-3 w-3 mr-1" />
-                                {recipe.prepTime}
-                              </span>
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                                <Users className="h-3 w-3 mr-1" />
-                                {recipe.servings}
-                              </span>
-                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                                {recipe.category}
-                              </span>
-                            </div>
-
-                            <div className="flex items-center justify-between pt-3 border-t border-[#0b0d0d]/5 mt-auto">
-                              <div className="flex items-center gap-1">
-                                {renderStars(recipe.rating)}
-                              </div>
-                              <Link
-                                href={`/discover/recipes/${recipe.slug}`}
-                                className="inline-flex items-center text-xs font-medium text-[#b88746] transition-colors hover:text-[#d4a15b] group-hover:gap-2"
-                              >
-                                View Recipe
-                                <ArrowRight className="ml-1.5 h-3 w-3 transition-transform group-hover:translate-x-1" />
-                              </Link>
-                            </div>
-                          </div>
+                        )}
+                        <div className={`absolute top-3 left-3 rounded-full px-3 py-1 text-xs font-medium ${getDifficultyColor(recipe.difficulty)}`}>
+                          {recipe.difficulty}
                         </div>
                       </div>
-                    ))}
-                  </div>
+                      <div className="flex flex-1 flex-col p-4">
+                        <h3 className="mb-2 text-base font-bold text-[#0b0d0d] transition-colors group-hover:text-[#b88746]">
+                          {recipe.title}
+                        </h3>
+                        <p className="mb-3 flex-1 text-xs leading-relaxed text-[#0b0d0d]/70">
+                          {recipe.description}
+                        </p>
+                        <div className="mb-3 flex flex-wrap gap-2">
+                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+                            <Clock className="mr-1 h-3 w-3" />
+                            {recipe.prepTime}
+                          </span>
+                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+                            <Users className="mr-1 h-3 w-3" />
+                            {recipe.servings}
+                          </span>
+                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+                            {recipe.category}
+                          </span>
+                        </div>
+                        <div className="mt-auto flex items-center justify-between border-t border-[#0b0d0d]/5 pt-3">
+                          <div className="flex items-center gap-1">
+                            {renderStars(recipe.rating)}
+                          </div>
+                          <Link
+                            href={`/discover/recipes/${recipe.slug}`}
+                            className="inline-flex items-center text-xs font-medium text-[#b88746] transition-colors hover:text-[#d4a15b] group-hover:gap-2"
+                          >
+                            View Recipe
+                            <ArrowRight className="ml-1.5 h-3 w-3 transition-transform group-hover:translate-x-1" />
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-
-                {/* Dots Indicator */}
-                {totalSlides > 1 && (
-                  <div className="mt-6 flex justify-center gap-2">
-                    {Array.from({ length: totalSlides }).map((_, index) => (
-                      <button
-                        key={index}
-                        onClick={() => setCurrentIndex(index)}
-                        className={`h-2 rounded-full transition-all ${
-                          index === currentIndex
-                            ? "w-8 bg-[#b88746]"
-                            : "w-2 bg-[#0b0d0d]/20 hover:bg-[#0b0d0d]/40"
-                        }`}
-                        aria-label={`Go to slide ${index + 1}`}
-                      />
-                    ))}
-                  </div>
-                )}
               </div>
             </section>
 
@@ -431,8 +191,6 @@ export default function RecipesPage() {
                 </Link>
               </div>
             </section>
-          </div>
-        </div>
       </div>
     </main>
   );

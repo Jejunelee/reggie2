@@ -35,6 +35,7 @@ const angleton = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://iamreggieaspiras.com"),
   title: "Reggie's Kitchen - Exploring Filipino Food & Culture",
   description:
     "Explore the rich heritage of Filipino cuisine through recipes, stories, and culinary traditions with Reggie Aspiras.",
