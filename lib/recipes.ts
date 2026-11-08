@@ -411,6 +411,10 @@ export const recipes: Recipe[] = [
     id: "13",
     title: "Pinakbet",
     description: "A beloved vegetable dish from the north.",
+    image: "/recipes/pinakbet.webp",
+    imageAlt: "Casa Juan pinakbet plates with vegetables, bagnet, and bagoong",
+    imageWidth: 768,
+    imageHeight: 1024,
     category: "Main Dishes",
     slug: "pinakbet",
     intro: [
@@ -493,6 +497,10 @@ export const recipes: Recipe[] = [
     id: "14",
     title: "Lechon",
     description: "A Filipino feast is never complete without lechon.",
+    image: "/recipes/lechon.webp",
+    imageAlt: "Casa Juan lechon plates with a suckling pig, lemongrass, and chilies",
+    imageWidth: 477,
+    imageHeight: 638,
     category: "Main Dishes",
     slug: "lechon",
     intro: [
@@ -601,6 +609,10 @@ export const recipes: Recipe[] = [
     id: "16",
     title: "Sinigang",
     description: "The quintessential Filipino comfort food.",
+    image: "/recipes/sinigang.webp",
+    imageAlt: "Casa Juan sinigang plates with prawns, tamarind, and vegetables",
+    imageWidth: 477,
+    imageHeight: 638,
     category: "Soups",
     slug: "sinigang",
     intro: [
@@ -658,6 +670,10 @@ export const recipes: Recipe[] = [
     id: "17",
     title: "Adobo",
     description: "Meat braised in vinegar, garlic and black pepper.",
+    image: "/recipes/adobo.webp",
+    imageAlt: "Casa Juan adobo plates with chicken, pork, garlic, and vinegar",
+    imageWidth: 477,
+    imageHeight: 633,
     category: "Main Dishes",
     slug: "adobo",
     intro: [
