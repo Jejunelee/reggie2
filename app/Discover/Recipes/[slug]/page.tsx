@@ -26,12 +26,16 @@ export async function generateMetadata({ params }: RecipePageProps): Promise<Met
 
   const title = `${recipe.title} Recipe | Chef Reggie Aspiras`;
   const url = `/discover/recipes/${recipe.slug}`;
-  const image = {
-    url: recipe.image,
-    alt: recipe.imageAlt ?? recipe.title,
-    width: recipe.imageWidth,
-    height: recipe.imageHeight,
-  };
+  const image = recipe.image
+    ? [
+        {
+          url: recipe.image,
+          alt: recipe.imageAlt ?? recipe.title,
+          width: recipe.imageWidth,
+          height: recipe.imageHeight,
+        },
+      ]
+    : undefined;
 
   return {
     title,
@@ -43,13 +47,13 @@ export async function generateMetadata({ params }: RecipePageProps): Promise<Met
       url,
       siteName: "Reggie's Kitchen",
       type: "article",
-      images: [image],
+      images: image,
     },
     twitter: {
       card: "summary_large_image",
       title,
       description: recipe.description,
-      images: [recipe.image],
+      images: recipe.image ? [recipe.image] : undefined,
     },
     metadataBase: new URL(SITE_URL),
   };
@@ -69,14 +73,22 @@ export default async function RecipePage({ params }: RecipePageProps) {
     <article className="bg-[#f4f1ea]">
       <header className="relative bg-[#0b0d0d]">
         <div className="relative aspect-[4/5] max-h-[78svh] w-full sm:aspect-[16/9] sm:max-h-[620px]">
-          <Image
-            src={recipe.image}
-            alt={recipe.imageAlt ?? recipe.title}
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover object-center"
-          />
+          {recipe.image ? (
+            <Image
+              src={recipe.image}
+              alt={recipe.imageAlt ?? recipe.title}
+              fill
+              priority
+              sizes="100vw"
+              className="object-cover object-center"
+            />
+          ) : (
+            <div className="flex h-full items-center justify-center pb-24">
+              <p className="font-angleton text-4xl tracking-wide text-[#b88746] sm:text-6xl">
+                Coming Soon
+              </p>
+            </div>
+          )}
           <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-[#0b0d0d]/80 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 h-3/5 bg-gradient-to-t from-[#0b0d0d] via-[#0b0d0d]/70 to-transparent" />
 
@@ -91,18 +103,29 @@ export default async function RecipePage({ params }: RecipePageProps) {
               <p className="mt-3 max-w-xl text-sm leading-relaxed text-white/85 sm:text-base">
                 {recipe.description}
               </p>
-              <div className="mt-4 flex flex-wrap items-center gap-2">
-                <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white">
-                  <Users className="mr-1.5 h-3 w-3" />
-                  {recipe.yield}
-                </span>
-              </div>
+              {recipe.yield ? (
+                <div className="mt-4 flex flex-wrap items-center gap-2">
+                  <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white">
+                    <Users className="mr-1.5 h-3 w-3" />
+                    {recipe.yield}
+                  </span>
+                </div>
+              ) : null}
             </div>
           </div>
         </div>
       </header>
 
       <div className="mx-auto max-w-[720px] px-5 py-10 sm:px-8 sm:py-14">
+        {recipe.intro?.length ? (
+          <div className="mb-12 space-y-4">
+            {recipe.intro.map((paragraph) => (
+              <p key={paragraph} className="text-sm leading-relaxed text-[#0b0d0d]/85 sm:text-base">
+                {paragraph}
+              </p>
+            ))}
+          </div>
+        ) : null}
         <section aria-labelledby="recipe-heading">
           <div className="mb-5 flex items-center gap-3">
             <span className="h-px w-8 bg-[#b88746]" />
@@ -110,6 +133,9 @@ export default async function RecipePage({ params }: RecipePageProps) {
               Recipe
             </h2>
           </div>
+          {recipe.note ? (
+            <p className="mb-6 text-sm leading-relaxed text-[#0b0d0d]/85 sm:text-base">{recipe.note}</p>
+          ) : null}
           <div className="space-y-8">
             {recipe.stepGroups.map((group) => (
               <div key={group.heading ?? group.steps[0]}>
@@ -153,10 +179,12 @@ export default async function RecipePage({ params }: RecipePageProps) {
           </div>
           <div className="overflow-hidden rounded-2xl border border-[#0b0d0d]/10 bg-white">
             {recipe.ingredientGroups.map((group) => (
-              <div key={group.heading}>
-                <h3 className="border-b border-[#0b0d0d]/10 bg-[#f4f1ea] px-4 py-2 text-xs font-medium uppercase tracking-[0.16em] text-[#b88746]">
-                  {group.heading}
-                </h3>
+              <div key={group.heading || group.items[0]?.item}>
+                {group.heading ? (
+                  <h3 className="border-b border-[#0b0d0d]/10 bg-[#f4f1ea] px-4 py-2 text-xs font-medium uppercase tracking-[0.16em] text-[#b88746]">
+                    {group.heading}
+                  </h3>
+                ) : null}
                 <ul className="divide-y divide-[#0b0d0d]/10">
                   {group.items.map((ingredient) => (
                     <li

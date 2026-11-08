@@ -85,15 +85,23 @@ export default function RecipesPage() {
                       key={recipe.id}
                       className="group flex h-full flex-col overflow-hidden rounded-2xl border border-[#0b0d0d]/5 bg-white shadow-sm transition-all hover:-translate-y-2 hover:shadow-xl"
                     >
-                      <div className="relative bg-[#f4f1ea]">
-                        <Image
-                          src={recipe.image}
-                          alt={recipe.imageAlt ?? recipe.title}
-                          width={recipe.imageWidth ?? 1200}
-                          height={recipe.imageHeight ?? 1600}
-                          sizes="(max-width: 640px) 100vw, 50vw"
-                          className="h-auto w-full"
-                        />
+                      <div className="relative bg-[#0b0d0d]">
+                        {recipe.image ? (
+                          <Image
+                            src={recipe.image}
+                            alt={recipe.imageAlt ?? recipe.title}
+                            width={recipe.imageWidth ?? 1200}
+                            height={recipe.imageHeight ?? 1600}
+                            sizes="(max-width: 640px) 100vw, 50vw"
+                            className="h-auto w-full"
+                          />
+                        ) : (
+                          <div className="flex aspect-[4/3] items-center justify-center">
+                            <p className="font-angleton text-3xl tracking-wide text-[#b88746] sm:text-4xl">
+                              Coming Soon
+                            </p>
+                          </div>
+                        )}
                         {recipe.featured && (
                           <div className="absolute top-3 right-3 rounded-full bg-[#b88746] px-3 py-1 text-xs font-bold text-white uppercase">
                             Featured
@@ -108,10 +116,12 @@ export default function RecipesPage() {
                           {recipe.description}
                         </p>
                         <div className="mb-3 flex flex-wrap gap-2">
-                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
-                            <Users className="mr-1 h-3 w-3" />
-                            {recipe.yield}
-                          </span>
+                          {recipe.yield ? (
+                            <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
+                              <Users className="mr-1 h-3 w-3" />
+                              {recipe.yield}
+                            </span>
+                          ) : null}
                           <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
                             {recipe.category}
                           </span>
