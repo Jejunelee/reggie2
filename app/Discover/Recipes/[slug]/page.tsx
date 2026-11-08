@@ -2,26 +2,15 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Clock, Users } from "lucide-react";
+import { Users } from "lucide-react";
 import AboutChefReggie from "@/app/components/AboutChefReggie";
-import { getCookableRecipes, getRecipe, type Recipe } from "@/lib/recipes";
+import { getCookableRecipes, getRecipe } from "@/lib/recipes";
 
 const SITE_URL = "https://iamreggieaspiras.com";
 
 type RecipePageProps = {
   params: Promise<{ slug: string }>;
 };
-
-function difficultyClass(difficulty: Recipe["difficulty"]) {
-  switch (difficulty) {
-    case "Easy":
-      return "text-green-700 bg-green-50";
-    case "Medium":
-      return "text-yellow-700 bg-yellow-50";
-    case "Hard":
-      return "text-red-700 bg-red-50";
-  }
-}
 
 export function generateStaticParams() {
   return getCookableRecipes().map((recipe) => ({ slug: recipe.slug }));
@@ -31,7 +20,7 @@ export async function generateMetadata({ params }: RecipePageProps): Promise<Met
   const { slug } = await params;
   const recipe = getRecipe(slug);
 
-  if (!recipe?.ingredients?.length) {
+  if (!recipe?.ingredientGroups.length || !recipe.stepGroups.length) {
     notFound();
   }
 
@@ -70,9 +59,11 @@ export default async function RecipePage({ params }: RecipePageProps) {
   const { slug } = await params;
   const recipe = getRecipe(slug);
 
-  if (!recipe?.ingredients?.length) {
+  if (!recipe?.ingredientGroups.length || !recipe.stepGroups.length) {
     notFound();
   }
+
+  let stepNumber = 0;
 
   return (
     <article className="bg-[#f4f1ea]">
@@ -101,22 +92,9 @@ export default async function RecipePage({ params }: RecipePageProps) {
                 {recipe.description}
               </p>
               <div className="mt-4 flex flex-wrap items-center gap-2">
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${difficultyClass(recipe.difficulty)}`}
-                >
-                  {recipe.difficulty}
-                </span>
-                <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white">
-                  <Clock className="mr-1.5 h-3 w-3" />
-                  Prep {recipe.prepTime}
-                </span>
-                <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white">
-                  <Clock className="mr-1.5 h-3 w-3" />
-                  {recipe.cookTime}
-                </span>
                 <span className="inline-flex items-center rounded-full bg-white/15 px-3 py-1 text-xs font-medium text-white">
                   <Users className="mr-1.5 h-3 w-3" />
-                  Serves {recipe.servings}
+                  {recipe.yield}
                 </span>
               </div>
             </div>
@@ -132,25 +110,35 @@ export default async function RecipePage({ params }: RecipePageProps) {
               Recipe
             </h2>
           </div>
-          {recipe.steps?.length ? (
-            <ol className="list-none space-y-5 p-0">
-              {recipe.steps.map((step, index) => (
-                <li key={step} className="flex gap-3">
-                  <span
-                    aria-hidden
-                    className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#b88746] text-xs font-bold text-white"
-                  >
-                    {index + 1}
-                  </span>
-                  <p className="pt-0.5 text-sm leading-relaxed text-[#0b0d0d]/85 sm:text-base">
-                    {step}
-                  </p>
-                </li>
-              ))}
-            </ol>
-          ) : (
-            <p className="font-angleton text-2xl tracking-wide text-[#b88746]">Coming Soon</p>
-          )}
+          <div className="space-y-8">
+            {recipe.stepGroups.map((group) => (
+              <div key={group.heading ?? group.steps[0]}>
+                {group.heading ? (
+                  <h3 className="mb-4 text-sm font-medium uppercase tracking-[0.16em] text-[#b88746]">
+                    {group.heading}
+                  </h3>
+                ) : null}
+                <ol className="list-none space-y-5 p-0">
+                  {group.steps.map((step) => {
+                    stepNumber += 1;
+                    return (
+                      <li key={step} className="flex gap-3">
+                        <span
+                          aria-hidden
+                          className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#b88746] text-xs font-bold text-white"
+                        >
+                          {stepNumber}
+                        </span>
+                        <p className="pt-0.5 text-sm leading-relaxed text-[#0b0d0d]/85 sm:text-base">
+                          {step}
+                        </p>
+                      </li>
+                    );
+                  })}
+                </ol>
+              </div>
+            ))}
+          </div>
         </section>
 
         <section className="mt-12" aria-labelledby="ingredients-heading">
@@ -163,21 +151,30 @@ export default async function RecipePage({ params }: RecipePageProps) {
               Ingredients
             </h2>
           </div>
-          <ul className="divide-y divide-[#0b0d0d]/10 overflow-hidden rounded-2xl border border-[#0b0d0d]/10 bg-white">
-            {recipe.ingredients.map((ingredient) => (
-              <li
-                key={ingredient.item}
-                className="flex items-baseline justify-between gap-4 px-4 py-3 text-sm sm:text-base"
-              >
-                <span className="text-[#0b0d0d]">{ingredient.item}</span>
-                {ingredient.amount ? (
-                  <span className="shrink-0 text-right font-medium text-[#0b0d0d]/70">
-                    {ingredient.amount}
-                  </span>
-                ) : null}
-              </li>
+          <div className="overflow-hidden rounded-2xl border border-[#0b0d0d]/10 bg-white">
+            {recipe.ingredientGroups.map((group) => (
+              <div key={group.heading}>
+                <h3 className="border-b border-[#0b0d0d]/10 bg-[#f4f1ea] px-4 py-2 text-xs font-medium uppercase tracking-[0.16em] text-[#b88746]">
+                  {group.heading}
+                </h3>
+                <ul className="divide-y divide-[#0b0d0d]/10">
+                  {group.items.map((ingredient) => (
+                    <li
+                      key={`${group.heading}-${ingredient.item}`}
+                      className="flex items-baseline justify-between gap-4 px-4 py-3 text-sm sm:text-base"
+                    >
+                      <span className="text-[#0b0d0d]">{ingredient.item}</span>
+                      {ingredient.amount ? (
+                        <span className="shrink-0 text-right font-medium text-[#0b0d0d]/70">
+                          {ingredient.amount}
+                        </span>
+                      ) : null}
+                    </li>
+                  ))}
+                </ul>
+              </div>
             ))}
-          </ul>
+          </div>
         </section>
 
         {recipe.gallery?.map((photo) => (

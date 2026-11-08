@@ -7,9 +7,7 @@ import Link from "next/link";
 import { 
   ArrowRight, 
   ChefHat, 
-  Clock,
   Users,
-  Star,
 } from "lucide-react";
 import { recipes } from "@/lib/recipes";
 
@@ -21,35 +19,6 @@ export default function RecipesPage() {
   const filteredRecipes = selectedCategory === "All"
     ? recipes
     : recipes.filter((recipe) => recipe.category === selectedCategory);
-
-  const getDifficultyColor = (difficulty: string) => {
-    switch(difficulty) {
-      case "Easy": return "text-green-600 bg-green-50";
-      case "Medium": return "text-yellow-600 bg-yellow-50";
-      case "Hard": return "text-red-600 bg-red-50";
-      default: return "text-gray-600 bg-gray-50";
-    }
-  };
-
-  const renderStars = (rating: number) => {
-    return (
-      <div className="flex items-center gap-0.5">
-        {[...Array(5)].map((_, i) => (
-          <Star
-            key={i}
-            className={`h-3 w-3 ${
-              i < Math.floor(rating)
-                ? "fill-[#b88746] text-[#b88746]"
-                : "fill-gray-200 text-gray-200"
-            }`}
-          />
-        ))}
-        <span className="ml-1 text-xs font-medium text-[#0b0d0d]/70">
-          {rating}
-        </span>
-      </div>
-    );
-  };
 
   return (
     <main className="bg-[#f4f1ea] min-h-screen">
@@ -130,9 +99,6 @@ export default function RecipesPage() {
                             Featured
                           </div>
                         )}
-                        <div className={`absolute top-3 left-3 rounded-full px-3 py-1 text-xs font-medium ${getDifficultyColor(recipe.difficulty)}`}>
-                          {recipe.difficulty}
-                        </div>
                       </div>
                       <div className="flex flex-1 flex-col p-4">
                         <h3 className="mb-2 text-base font-bold text-[#0b0d0d] transition-colors group-hover:text-[#b88746]">
@@ -143,21 +109,14 @@ export default function RecipesPage() {
                         </p>
                         <div className="mb-3 flex flex-wrap gap-2">
                           <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
-                            <Clock className="mr-1 h-3 w-3" />
-                            {recipe.prepTime}
-                          </span>
-                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
                             <Users className="mr-1 h-3 w-3" />
-                            {recipe.servings}
+                            {recipe.yield}
                           </span>
                           <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-700">
                             {recipe.category}
                           </span>
                         </div>
-                        <div className="mt-auto flex items-center justify-between border-t border-[#0b0d0d]/5 pt-3">
-                          <div className="flex items-center gap-1">
-                            {renderStars(recipe.rating)}
-                          </div>
+                        <div className="mt-auto flex items-center justify-end border-t border-[#0b0d0d]/5 pt-3">
                           <Link
                             href={`/discover/recipes/${recipe.slug}`}
                             className="inline-flex items-center text-xs font-medium text-[#b88746] transition-colors hover:text-[#d4a15b] group-hover:gap-2"
